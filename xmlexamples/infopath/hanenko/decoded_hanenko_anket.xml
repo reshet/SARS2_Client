@@ -1,0 +1,21 @@
+<test     ALG="tile://sars_int/at.m" UID="museum_img" NAME="Опросник посетителей музея Ханенко с картинками">
+<EELC0  ALG="tile://sars_int/q/st.m" NEXT_ID_S="EELC1" NEXT_ID="MBlock"/>
+
+<EELC1 ALG="tile://sars_int/q/cg.m" NEXT_ID="INT_HALT"/>
+<M1 ALG="tile://sars_int/q/s.m" QUESTION="M1. Как часто Вы посещаете музеи? ОДИН ОТВЕТ. &lt;br/&gt;&lt;br/&gt;&lt;img src=&quot;~FILEDIR~0.png&quot;/&gt;&lt;br/&gt;&lt;br/&gt;" NEXT_ID="M2"><E ID="1" TEXT="2-3 раза в неделю"></E><E ID="2" TEXT="1 раз в неделю"></E><E ID="3" TEXT="1 раз в месяц"></E><E ID="4" TEXT="1 раз в один-два месяца"></E><E ID="5" TEXT="2-4 раза в год"></E><E ID="6" TEXT="1 раз в год и реже"></E></M1>
+<M2 ALG="tile://sars_int/q/m.m" QUESTION="M2. С кем Вы обычно посещаете музеи? НЕСКОЛЬКО ВАРИАНТОВ ОТВЕТОВ. &lt;br/&gt;&lt;br/&gt;&lt;img src=&quot;~FILEDIR~1.png&quot;/&gt;&lt;br/&gt;&lt;br/&gt;" ANOTHER_TF="True" NEXT_ID="M3"><E ID="1" TEXT="Один &lt;br/&gt;"></E><E ID="2" TEXT="Вместе со значимым вторым (бойфренд/герлфренд, партнер/партнерша, муж/жена)"></E><E ID="3" TEXT="С близкими родственниками (родители, брат/сестра)"></E><E ID="4" TEXT="С близкими родственниками (с детьми)"></E><E ID="5" TEXT="С друзьями, товарищами"></E><E ID="6" TEXT="С экскурсионной группой"></E><E ID="7" TEXT="Другое" OTHER="True"></E></M2>
+<M3 ALG="tile://sars_int/q/s.m" QUESTION="M3. А с кем пришли сегодня? ОДИН ОТВЕТ." ANOTHER_TF="True" NEXT_ID="M4"><E ID="1" TEXT="Один &lt;br/&gt;&lt;br/&gt;&lt;img src=&quot;~FILEDIR~2.png&quot;/&gt;&lt;br/&gt;&lt;br/&gt;"></E><E ID="2" TEXT="Вместе со значимым вторым (бойфренд/герлфренд, партнер/партнерша, муж/жена) &lt;br/&gt;&lt;br/&gt;&lt;img src=&quot;~FILEDIR~3.png&quot;/&gt;&lt;br/&gt;&lt;br/&gt;"></E><E ID="3" TEXT="С близкими родственниками (родители, брат/сестра)"></E><E ID="4" TEXT="С близкими родственниками (с детьми) &lt;br/&gt;&lt;br/&gt;&lt;img src=&quot;~FILEDIR~4.png&quot;/&gt;&lt;br/&gt;&lt;br/&gt;"></E><E ID="5" TEXT="С друзьями, товарищами"></E><E ID="6" TEXT="С экскурсионной группой"></E><E ID="7" TEXT="Другое" OTHER="True"></E></M3>
+<M4 ALG="tile://sars_int/q/m.m" QUESTION="M4. В музее Вы предпочитаете посещать… &lt;strong&gt;НЕСКОЛЬКО ВАРИАНТОВ ОТВЕТОВ. &lt;/strong&gt;&lt;br/&gt;&lt;img src=&quot;~FILEDIR~5.png&quot;/&gt;&lt;br/&gt;&lt;br/&gt;&lt;br/&gt;" NEXT_ID="MBlockE"><E ID="1" TEXT="Постоянная экспозиция музея"></E><E ID="2" TEXT="Временные выставки из коллекции музея"></E><E ID="3" TEXT="Гостевые выставки"></E><E ID="4" TEXT="Мероприятия, концерты"></E><E ID="5" TEXT="Нецеленаправленное посещение"></E><E ID="99" TEXT="ТРУДНО СКАЗАТЬ / НЕ ЗНАЮ" SERVICE="True" INCOMPATIBLE="False"></E></M4>
+<MBlock ALG="tile://sars_int/q/cg.m" NEXT_ID="M1"/>
+<MBlockE ALG="tile://sars_int/q/rt.m"/>
+<INT_HALT ALG="tile://sys_m_ts/q/g.m" WDG="tile://sys_m_ts/q/w.w" IMAGE="mlsp://scale-img/base/inforq" IS_LAST="1" CAPTION="Завершення" SUBCAPTION="Ви відповіли на всі питання інтерв'ю" INFO_TEXT="Ви маєте змогу виправити введені відповіді, повернувшись назад та внісши відповідні правки. &lt;br/&gt; Для завершення, натисніть 'Далі'"/>
+<ACTIVE_DISPLAY_LIST>
+<E CAPTION="" NAME=""/>
+</ACTIVE_DISPLAY_LIST>
+<ANKETA_LEVEL_LIST>
+<E INTERVIEW="" ANKETA=""/>
+</ANKETA_LEVEL_LIST>
+<SYSTEM_LEVEL_LIST>
+<E INTERVIEW="" SYSTEM=""/>
+</SYSTEM_LEVEL_LIST>
+</test>

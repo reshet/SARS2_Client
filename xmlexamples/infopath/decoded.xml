@@ -1,0 +1,13 @@
+<test     ALG="tile://sars_int/at.m" UID="1" NAME="САРС-2-Пример">
+<Q1 ALG="tile://sars_int/q/s.m" QUESTION="Q1. Закрытый вопрос с единичным выбором" NEXT_ID="INT_HALT"><E ID="1" TEXT="Альтернатива 1&lt;br/&gt; &lt;br/&gt;"></E><E ID="2" TEXT="Альтернатива 2"></E></Q1>
+<INT_HALT ALG="tile://sys_m_ts/q/g.m" WDG="tile://sys_m_ts/q/w.w" IMAGE="mlsp://scale-img/base/inforq" IS_LAST="1" CAPTION="Завершення" SUBCAPTION="Ви відповіли на всі питання інтерв'ю" INFO_TEXT="Ви маєте змогу виправити введені відповіді, повернувшись назад та внісши відповідні правки. &lt;br/&gt; Для завершення, натисніть 'Далі'"/>
+<ACTIVE_DISPLAY_LIST>
+<E CAPTION="" NAME=""/>
+</ACTIVE_DISPLAY_LIST>
+<ANKETA_LEVEL_LIST>
+<E INTERVIEW="" ANKETA=""/>
+</ANKETA_LEVEL_LIST>
+<SYSTEM_LEVEL_LIST>
+<E INTERVIEW="" SYSTEM=""/>
+</SYSTEM_LEVEL_LIST>
+</test>
