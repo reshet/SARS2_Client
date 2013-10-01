@@ -15,4 +15,7 @@ config["My tests"] = {
     tests: [
         "test/*-test.js"
     ]
+    /*deps: [
+        "test/deps*//*.js" // Jquery is in here
+    ]*/
 };
