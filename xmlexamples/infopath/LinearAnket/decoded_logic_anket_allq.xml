@@ -1,0 +1,20 @@
+<test     ALG="tile://sars_int/at.m" UID="2" NAME="САРС-2-Пример">
+<Q1 ALG="tile://sars_int/q/s.m" QUESTION="Q1. Закрытый вопрос с единичным выбором" NEXT_ID="Q2"><E ID="1" TEXT="Альтернатива 1&lt;br/&gt; &lt;br/&gt;"></E><E ID="2" TEXT="Альтернатива 2"></E></Q1>
+<Q2 ALG="tile://sars_int/q/s.m" QUESTION="Q2. Закрытый вопрос с единичным выбором и другим" ANOTHER_TF="True" NEXT_ID="Q3"><E ID="1" TEXT="Альтернатива 1&lt;br/&gt;"></E><E ID="2" TEXT="Альтернатива 2&lt;br/&gt;"></E><E ID="90" TEXT="Другое" OTHER="True"></E></Q2>
+<Q3 ALG="tile://sars_int/q/m.m" QUESTION="Q3. Множественный выбор" NEXT_ID="Q4"><E ID="1" TEXT="Альтернатива 1"></E><E ID="2" TEXT="Альтернатива 2"></E></Q3>
+<Q4 ALG="tile://sars_int/q/m.m" QUESTION="Q4. Множественныйвыборс несовместимой альтернативой" NEXT_ID="Q5"><E ID="1" TEXT="Альт 1"></E><E ID="2" TEXT="Альт 2"></E><E ID="3" TEXT="Несовместимая альт" INCOMPATIBLE="False"></E></Q4>
+<Q5 ALG="tile://sars_int/q/o.m" QUESTION="Q5. Открытый вопрос текстовый" ANOTHER_TF="True" NEXT_ID="Q6"></Q5>
+<Q6 ALG="tile://sars_int/q/o.m" QUESTION="Q6. Открытый вопрос целочисленный" ANOTHER_TF="True" NUMERIC="int" NEXT_ID="Q7"></Q6>
+<Q7 ALG="tile://sars_int/q/o.m" QUESTION="Q7. Открытый дробный" ANOTHER_TF="True" NUMERIC="double" NEXT_ID="Q8"></Q7>
+<Q8 ALG="tile://sars_int/q/o.m" QUESTION="Q8. Открытый дата время" ANOTHER_TF="True" NUMERIC="date" NEXT_ID="INT_HALT"></Q8>
+<INT_HALT ALG="tile://sys_m_ts/q/g.m" WDG="tile://sys_m_ts/q/w.w" IMAGE="mlsp://scale-img/base/inforq" IS_LAST="1" CAPTION="Завершення" SUBCAPTION="Ви відповіли на всі питання інтерв'ю" INFO_TEXT="Ви маєте змогу виправити введені відповіді, повернувшись назад та внісши відповідні правки. &lt;br/&gt; Для завершення, натисніть 'Далі'"/>
+<ACTIVE_DISPLAY_LIST>
+<E CAPTION="" NAME=""/>
+</ACTIVE_DISPLAY_LIST>
+<ANKETA_LEVEL_LIST>
+<E INTERVIEW="" ANKETA=""/>
+</ANKETA_LEVEL_LIST>
+<SYSTEM_LEVEL_LIST>
+<E INTERVIEW="" SYSTEM=""/>
+</SYSTEM_LEVEL_LIST>
+</test>
