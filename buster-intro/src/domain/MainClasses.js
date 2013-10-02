@@ -106,11 +106,11 @@ function SingleChoiceQuestion(id,text,alternatives,withAnother){
 
 }; //End of SingleChoiceQuestion
 
-var arr_alt = ['alt1','alt2','alt3'];
+//var arr_alt = ['alt1','alt2','alt3'];
 
-var ch_snglchcq = new SingleChoiceQuestion(1,"Some text",arr_alt);
+//var ch_snglchcq = new SingleChoiceQuestion(1,"Some text",arr_alt);
 
-console.log("ch_snglchcq:" + ch_snglchcq.getId() + " " + ch_snglchcq.getText() + " " + ch_snglchcq.getAlternatives())
+//console.log("ch_snglchcq:" + ch_snglchcq.getId() + " " + ch_snglchcq.getText() + " " + ch_snglchcq.getAlternatives())
 
 /*
 SingleChoiceQuestion.prototype = AsbtractQuestion;
