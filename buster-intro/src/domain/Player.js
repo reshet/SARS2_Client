@@ -6,7 +6,8 @@
  * To change this template use File | Settings | File Templates.
  */
 
-var domain = require("../../src/domain/MainClasses.js")
+if(require !== undefined)
+    var domain = require("../../src/domain/MainClasses.js")
 
 function Transition(start,end){
    var _start = start;
