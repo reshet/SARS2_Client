@@ -6,7 +6,7 @@
  * To change this template use File | Settings | File Templates.
  */
 
-
+var adapter = require("../src/adapter.js");
 
 
 var doIt = function(){
@@ -34,3 +34,4 @@ exports.serverurl = url_get_anket;
 exports.loadAnket = loadAnket;
 
 exports.doIt = doIt;
+exports.play = adapter.playerPlay;

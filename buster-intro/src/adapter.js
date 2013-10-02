@@ -13,3 +13,9 @@ var loadAnket = function(task_id,cb){
         cb(data);
     });
 }
+
+var playerPlay = function(logic,canvas){
+     return true;
+}
+
+if(exports!=='undeifined')exports.playerPlay = playerPlay;
