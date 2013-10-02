@@ -6,7 +6,8 @@
  * To change this template use File | Settings | File Templates.
  */
 
-var player = require("../src/domain/Player.js");
+//var player = require("../src/domain/Player.js");
+
 var url_get_anket = 'http://82.196.0.140/MSS/JSAdapter.php';
 
 var loadAnket = function(task_id,cb){
