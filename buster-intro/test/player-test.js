@@ -92,6 +92,22 @@ buster.testCase("Test anket parser small",
 
             assert.equals(logic.getQuestions().toString(),parser.parse().getQuestions().toString());
 
+        },
+        "parse real anket small with transitions": function(){
+            //this.
+            //console.log(refer_anket);
+            var parser = new player.Parser(refer_anket);
+            var logic = new player.Logic();
+            question = new domain.single("Q1","Q1. Закрытый вопрос с единичным выбором",[new domain.alt("1","Альтернатива 1<br/> <br/>"),new domain.alt("2","Альтернатива 2")],false);
+            //console.log(typeof question);
+            //console.log(question.toString());
+            //assert(true);
+            logic.addQuestion(question);
+            logic.addTransition(new player.Transition("Q1","Q2"));
+            //console.log(parser.parse().getTransitions());
+            assert.equals(logic.getQuestions().toString(),parser.parse().getQuestions().toString());
+            assert.equals(logic.getTransitions().toString(),parser.parse().getTransitions().toString());
+
         }
     }
 );

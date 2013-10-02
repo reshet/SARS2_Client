@@ -11,14 +11,19 @@ var domain = require("../../src/domain/MainClasses.js")
 function Transition(start,end){
    var _start = start;
    var _end = end;
+    this.toString = function(){
+        return _start+" "+_end;
+    }
 }
 function Logic(){
     var _quest = [];
     var _trans = [];
     this.addTransition = function(trans){
-        if(typeof trans === Transition){
-           _trans.push(trans);
-        }
+        //console.log("typeof "+typeof trans);
+        /*if(typeof trans === Transition){
+
+        }*/
+        _trans.push(trans);
     }
     this.addQuestion = function(quest){
         _quest.push(quest);
@@ -62,10 +67,15 @@ function Parser(anket_raw){
                         }
                     }
                     if(qtype === "tile://sars_int/q/s.m")question = new domain.single(key,text,alts,false);
-                    console.log(question);
+                    //console.log(question);
                     logic.addQuestion(question);
+                    if(quests[key][0]["@"]["NEXT_ID"]!==undefined){
+                        //console.log("TRANS!!! "+quests[key][0]["@"]["NEXT_ID"]);
+                        logic.addTransition(new Transition(key,quests[key][0]["@"]["NEXT_ID"]));
+                    }
                     //console.log(qtype+" "+text);
                 }
+
             }
         }
         //var question = new domain.single("Q1","Q1. Закрытый вопрос с единичным выбором",[new domain.alt("1","Альтернатива 1<br/> <br/>"),new domain.alt("2","Альтернатива 2<br/> <br/>")],false);

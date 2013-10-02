@@ -23,6 +23,10 @@
            loadAnket(592,function(data){
                //$().button('');
                console.log(data);
+               var parser = player.Parser(data);
+               var logic = parser.parse();
+               console.log("AFTER");
+               console.log(logic);
            });
         }
     </script>
