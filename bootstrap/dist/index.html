@@ -16,26 +16,27 @@
     <script src="../../buster-intro/src/domain/MainClasses.js"></script>
     <script src="../../buster-intro/src/domain/Player.js"></script>
     <script src="../../buster-intro/src/adapter.js"></script>
-    <script type="text/javascript">
 
-        function initialize(){
-
-        }
-        function load(){
-           // $().button('loading');
-           loadAnket(592,function(data){
-               //$().button('');
-               console.log(data);
-               var parser = player.Parser(data);
-               var logic = parser.parse();
-               console.log("AFTER");
-               console.log(logic);
-           });
-        }
-    </script>
 
 </head>
 <body onload="initialize()">
+<script type="text/javascript">
+
+    function initialize(){
+
+    }
+    function load(){
+        // $().button('loading');
+        loadAnket(592,function(data){
+            //$().button('');
+            console.log(data);
+            var parser = player.Parser(data);
+            var logic = parser.parse();
+            console.log("AFTER");
+            console.log(logic);
+        });
+    }
+</script>
 <h1 class="text-center">Linear Anket</h1>
 <button type="button" data-loading-text="Загрузка анкеты с сервера..." class="btn btn-primary" onclick="load()">
     Загрузить тестовую анкету
