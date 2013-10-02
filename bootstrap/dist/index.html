@@ -13,8 +13,7 @@
     <![endif]-->
 
     <script src="../../buster-intro/src/require.js"></script>
-    <script src="../../buster-intro/src/domain/MainClasses.js"></script>
-    <script src="../../buster-intro/src/domain/Player.js"></script>
+
     <script src="../../buster-intro/src/adapter.js"></script>
 
 
@@ -27,14 +26,17 @@
     }
     function load(){
         // $().button('loading');
-        loadAnket(592,function(data){
-            //$().button('');
-            console.log(data);
-            var parser = player.Parser(data);
-            var logic = parser.parse();
-            console.log("AFTER");
-            console.log(logic);
+        require(["../../buster-intro/src/domain/MainClasses.js","../../buster-intro/src/domain/Player.js"], function (foo) {
+            loadAnket(592,function(data){
+                //$().button('');
+                console.log(data);
+                var parser = player.Parser(data);
+                var logic = parser.parse();
+                console.log("AFTER");
+                console.log(logic);
+            });
         });
+
     }
 </script>
 <h1 class="text-center">Linear Anket</h1>
