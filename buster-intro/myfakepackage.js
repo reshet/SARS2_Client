@@ -256,7 +256,7 @@ function AnketParser(anket_raw){
                     var alts = [];
 
                     //have alts
-                    if(quests[key][0]["#"]["E"]!==undefined){
+                    if(quests[key][0]["#"]!==null && quests[key][0]["#"]["E"]!==undefined){
                         var arr = quests[key][0]["#"]["E"];
 
                         for(var i = 0;i < arr.length;i++){
