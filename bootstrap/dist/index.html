@@ -22,9 +22,9 @@
     function initialize(){
         // console.log(url_get_anket);
         //console.log(new Transition("",""));
-        var s = new Logic();
+      /*  var s = new Logic();
         s.addQuestion({_id:"sss"});
-        console.log(s);
+        console.log(s);*/
     }
     function load(){
         // $().button('loading');
@@ -36,8 +36,8 @@
             console.log(data);
             var parser = new AnketParser(data["LOGIC"]);
             var logic = parser.parse();
-            console.log("AFTER");
-            console.log(logic);
+            //console.log("AFTER");
+            console.log(logic.toString());
         });
 
     }
