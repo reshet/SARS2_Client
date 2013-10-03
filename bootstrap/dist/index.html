@@ -11,10 +11,7 @@
     <script src="../../assets/js/html5shiv.js"></script>
     <script src="../../assets/js/respond.min.js"></script>
     <![endif]-->
-
-    <script src="../../buster-intro/src/require.js"></script>
-
-    <script src="../../buster-intro/src/adapter.js"></script>
+    <script src="../../buster-intro/mypackage.js"></script>
 
 
 </head>
@@ -26,15 +23,16 @@
     }
     function load(){
         // $().button('loading');
-        require(["../../buster-intro/src/domain/MainClasses.js","../../buster-intro/src/domain/Player.js","../../buster-intro/src/adapter.js"], function (foo,foo2,foo3) {
-            loadAnket(592,function(data){
-                //$().button('');
-                console.log(data);
-                var parser = player.Parser(data);
-                var logic = parser.parse();
-                console.log("AFTER");
-                console.log(logic);
-            });
+    /*    require(["../../buster-intro/src/domain/MainClasses.js","../../buster-intro/src/domain/Player.js","../../buster-intro/src/adapter.js"], function (foo,foo2,foo3) {
+
+        });*/
+        loadAnket(592,function(data){
+            //$().button('');
+            console.log(data);
+            var parser = player.Parser(data);
+            var logic = parser.parse();
+            console.log("AFTER");
+            console.log(logic);
         });
 
     }
