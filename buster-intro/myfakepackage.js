@@ -236,7 +236,7 @@ function Logic(){
     }
 }
 
-function Parser(anket_raw){
+function AnketParser(anket_raw){
     var _raw_anket = anket_raw;
 
     this.parse = function (){
