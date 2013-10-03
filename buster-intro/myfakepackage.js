@@ -241,7 +241,7 @@ function AnketParser(anket_raw){
 
     this.parse = function (){
         var logic = new Logic();
-        var anket = JSON.parse(_raw_anket);
+        var anket = _raw_anket;
         //console.log(anket);
         if(anket["test"][0]["#"] !== undefined){
             //console.log("GO");
