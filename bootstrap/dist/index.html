@@ -34,7 +34,7 @@
         loadAnket(592,function(data){
             //$().button('');
             console.log(data);
-            var parser = new AnketParser(data);
+            var parser = new AnketParser(data["LOGIC"]);
             var logic = parser.parse();
             console.log("AFTER");
             console.log(logic);
