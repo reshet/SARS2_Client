@@ -20,6 +20,8 @@
 <body onload="initialize()">
 <script type="text/javascript">
 
+    var curr_start;
+    var curr_finish;
     function initialize(){
         // console.log(url_get_anket);
         //console.log(new Transition("",""));
@@ -46,6 +48,7 @@
             //console.log("AFTER");
             //console.log(logic.toString());
             next(curr_elem_index)
+            curr_start = new Date().getTime();
             $("#load_anket_btn").hide();
         });
 
@@ -145,9 +148,27 @@
                 }
         );
     }
+    function finilizeInterview(){
+        var formatDate = function(datetime){
+            var start_date = new Date(datetime);
+            var month = addzero(start_date.getMonth()+1);
+            var day = addzero(start_date.getDate());
+            var hours = addzero(start_date.getHours());
+            var minutes = addzero(start_date.getMinutes());
+            var seconds = addzero(start_date.getSeconds());
+            var year = 1900+start_date.getYear();
+
+            start_date = day+"."+month+"."+year+" "+hours+":"+minutes+":"+seconds;
+            return start_date;
+        }
+     //finish_date = finish_date.toString('yyyy-mm-dd')+" "+finish_date.toTimeString();
+        current_interview["START_TIME"] = formatDate(curr_start);
+        current_interview["END_TIME"] = formatDate(curr_finish);
+    }
     function finishInterview(){
         //curr_finish = new Date().getTime();
-        //finilizeInterview();
+        curr_finish = new Date().getTime();
+        finilizeInterview();
         console.log(JSON.stringify(current_interview));
         $("#panel_alts").empty();
         $("#q_title").html("<h3><small>Завершено</small></h3>");
