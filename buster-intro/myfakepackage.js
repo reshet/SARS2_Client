@@ -151,6 +151,10 @@ function MultipleChoiceQuestion(id,text,alternatives, withAnother){
         return _withAnother;
 
     }
+    this.toString = function(){
+        var str =  _id+" "+_text+" "+_alternatives+" "+_withAnother;
+        return str;
+    }
 }; //End of MultipleChoiceQuestion
 /*
  function MultipleChoiceQuestionWithExclusiveAlternative(id,text,alternatives, withAnother){
@@ -192,6 +196,10 @@ function OpenedQuestion(id,text,type){
     }
     this.getType = function(){
         return _type;
+    }
+    this.toString = function(){
+        var str =  _id+" "+_text+" "+_type;
+        return str;
     }
 
 };
@@ -253,6 +261,7 @@ function AnketParser(anket_raw){
                     var question = null;
                     var qtype = quests[key][0]["@"]["ALG"];
                     var text = quests[key][0]["@"]["QUESTION"];
+                    var withOther = quests[key][0]["@"]["ANOTHER_TF"];
                     var alts = [];
 
                     //have alts
@@ -266,7 +275,18 @@ function AnketParser(anket_raw){
 
                         }
                     }
-                    if(qtype === "tile://sars_int/q/s.m")question = new SingleChoiceQuestion(key,text,alts,false);
+                    if(qtype === "tile://sars_int/q/s.m")question = new SingleChoiceQuestion(key,text,alts,withOther);
+                    if(qtype === "tile://sars_int/q/o.m"){
+                        var open_type = "text";
+                        if(quests[key][0]["@"]["NUMERIC"]!==undefined){
+                            open_type =  quests[key][0]["@"]["NUMERIC"];
+                        }
+                        question = new OpenedQuestion(key,text,open_type);
+                        //console.log(question);
+                    }
+
+                    if(qtype === "tile://sars_int/q/m.m")question = new MultipleChoiceQuestion(key,text,alts,withOther);
+
                     //console.log(question);
                     logic.addQuestion(question);
                     if(quests[key][0]["@"]["NEXT_ID"]!==undefined){
@@ -297,7 +317,7 @@ function AnketParser(anket_raw){
 //var player = require("../src/domain/Player.js");
 
 var url_get_anket = 'http://82.196.0.140/MSS/JSAdapter.php';
-//var url_get_anket = 'http://Local/MSS/JSAdapter.php';
+//var url_get_anket = 'http://localhost/MSS/JSAdapterLocal.php';
 
 
 var loadAnket = function(task_id,cb){

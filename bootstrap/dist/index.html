@@ -2,6 +2,7 @@
 <html>
 <head>
     <title>Bootstrap 101 Template</title>
+    <meta charset='utf-8'/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- Bootstrap -->
     <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
@@ -26,6 +27,10 @@
         s.addQuestion({_id:"sss"});
         console.log(s);*/
     }
+    var logicAnket = null;
+    var current_interview = {};
+    var curr_elem_index = 0;
+    var url_post_interview = 'http://82.196.0.140/MSS/MainGate.php';
     function load(){
         // $().button('loading');
     /*    require(["../../buster-intro/src/domain/MainClasses.js","../../buster-intro/src/domain/Player.js","../../buster-intro/src/adapter.js"], function (foo,foo2,foo3) {
@@ -36,16 +41,207 @@
             console.log(data);
             var parser = new AnketParser(data["LOGIC"]);
             var logic = parser.parse();
+            console.log(logic);
+             logicAnket = logic;
             //console.log("AFTER");
-            console.log(logic.toString());
+            //console.log(logic.toString());
+            next(curr_elem_index)
+            $("#load_anket_btn").hide();
         });
 
     }
+    function determineNext(){
+
+        saveResult();
+        curr_elem_index++;
+        if(curr_elem_index<logicAnket.getQuestions().length){
+           next(curr_elem_index);
+        }else{
+            finishInterview();
+        }
+    }
+    function next(index){
+        var curr_quest = logicAnket.getQuestions()[index];
+        console.log(curr_quest);
+        $("#q_title").text(curr_quest.getText());
+        //console.log(typeof curr_quest);
+        if(curr_quest instanceof SingleChoiceQuestion){
+            showAlts(curr_quest.getAlternatives());
+        }
+        else
+        if(curr_quest instanceof MultipleChoiceQuestion){
+            console.log("jhere");
+            showAltsCheckbox(curr_quest.getAlternatives());
+        }else
+        if(curr_quest instanceof OpenedQuestion){
+             showInput(curr_quest.getType());
+        }
+
+
+
+    }
+    function saveResult(){
+        var curr_quest = logicAnket.getQuestions()[curr_elem_index];
+        var code = curr_quest.getId();
+        if(curr_quest instanceof SingleChoiceQuestion){
+            //current_interview[code] =  $('input[name="alternatives"]:checked').val();
+            current_interview[code] = $("input:radio[name='alternatives']:checked").data("var");
+         }
+        else
+        if(curr_quest instanceof MultipleChoiceQuestion){
+            //current_interview[code] =  $('input[name="alternatives"]:checked').val();
+            //var data = [];
+            $("input:checkbox[name='alternatives']:checked").each(function(){
+                var subcode = $(this).data("var");
+                if(subcode!==undefined){
+                    //console.log(subcode);
+                    current_interview[code+"_"+subcode] = "1";
+                }
+
+            });
+
+
+        }else
+        if(curr_quest instanceof OpenedQuestion){
+            current_interview[code] = $('input[name="answer"]').val();
+        }
+        console.log(current_interview[code]);
+
+    }
+
+    function actualServerPostInterview(interview,login,task_id){
+        function encode_utf8( s ) {
+            return unescape( encodeURIComponent( s ) );
+        }
+
+        function decode_utf8( s ) {
+            return decodeURIComponent( escape( s ) );
+        }
+        var content = '';
+        for(var s in interview){
+            content +=s+'="'+interview[s]+'" ';
+        }
+        var anket_ans = '<RQ><interview '+content+'/></RQ>';
+        console.log(anket_ans);
+        anket_ans = btoa(encode_utf8(anket_ans));
+        console.log("there");
+        console.log(anket_ans);
+        var xml ='<RQ SERVICE = "MSS" ME = "194.44.143.27" SCREEN = "240" USERID = "46">'+
+                '<method name = "sitTask" TASK="'+task_id+'" ANSWER="'+anket_ans+'" USERID ="'+login+'" PSWD="default"/>'+
+                '</RQ>';
+        console.log(xml);
+        $.ajax({
+                    type:"POST",
+                    url:url_post_interview,
+                    data:xml,
+                    contentType: "text/xml",
+                    dataType: "text",
+                    success:function(data){
+                        console.log(data);
+                    },
+                    error:function(data){
+                        alert("Ошибка, сообщите администратору: "+JSON.stringify(data));
+                    }
+                }
+        );
+    }
+    function finishInterview(){
+        //curr_finish = new Date().getTime();
+        //finilizeInterview();
+        console.log(JSON.stringify(current_interview));
+        $("#panel_alts").empty();
+        $("#q_title").html("<h3><small>Завершено</small></h3>");
+        $("#playerNext").hide();
+        actualServerPostInterview(current_interview, 1001,581);
+        $("#panel_alts").append("<h3>Интервью пройдено! Результат отправлен на сервер</h3>");
+        //total_ints_done++;
+        //current_interview = {};
+
+    };
+    function showInput(type){
+        $("#panel_alts").empty();
+        $("#panel_alts").append('<input name="answer" type="text" validate="required"/>');
+        switch(type){
+            case "text":
+
+                break;
+            case "int":
+                break;
+            case "double":
+                break;
+            case "date":
+                break;
+
+        }
+    }
+    function showAlts(alts){
+
+        $("#panel_alts").empty();
+        $("#panel_alts").append('<div class="btn-group-vertical" data-toggle="buttons-radio">');
+        for(var ss in alts){
+          //$("#panel_alts").append("<b>"+alts[ss].getId()+". "+alts[ss].getText()+"</b></br>");
+          //  $("#panel_alts").append('<button data-toggle="button" class="btn btn-primary">'+alts[ss].getId()+". "+alts[ss].getText()+"</button>");
+            //console.log(alts[ss]);
+            var vv = alts[ss].getText();
+            var regex = /(<([^>]+)>)/ig;
+                 //body = "<p>test</p>"
+            var result = vv.replace(regex, "");
+            //vv = $(vv).text();
+            //alert($(vv).text());
+            $("#panel_alts").append(
+                    ' <label class="btn btn-primary btn-lg btn-block">'
+                            +'<input type="radio" class="text-left" name="alternatives" data-var="'+alts[ss].getId()+'">'+result+ "</input>"+
+                     '</label>'
+                           // '<button data-toggle="button" class="btn btn-primary">'+alts[ss].getId()+". "+alts[ss].getText()+"</button>"
+            );
+        }
+        $("#panel_alts").append('</div>');
+    }
+    function showAltsCheckbox(alts){
+
+        $("#panel_alts").empty();
+        $("#panel_alts").append('<div class="btn-group-vertical">');
+        for(var ss in alts){
+            //$("#panel_alts").append("<b>"+alts[ss].getId()+". "+alts[ss].getText()+"</b></br>");
+            //  $("#panel_alts").append('<button data-toggle="button" class="btn btn-primary">'+alts[ss].getId()+". "+alts[ss].getText()+"</button>");
+           // console.log(alts[ss]);
+            var vv = alts[ss].getText();
+            var regex = /(<([^>]+)>)/ig;
+            //body = "<p>test</p>"
+            var result = vv.replace(regex, "");
+            //vv = $(vv).text();
+            //alert($(vv).text());
+            $("#panel_alts").append(
+                   // '<button type="button" name="alternatives"   data-var="'+alts[ss].getId()+'" class="btn btn-primary btn-block">'+result+'</button>'
+                    ' <label class="btn btn-primary btn-lg btn-block">'
+                            +'<input type="checkbox" data-toggle="checkbox" class="text-left" name="alternatives" data-var="'+alts[ss].getId()+'">'+result+ "</input>"+
+                            '</label>'
+                    // '<button data-toggle="button" class="btn btn-primary">'+alts[ss].getId()+". "+alts[ss].getText()+"</button>"
+            );
+        }
+        $("#panel_alts").append('</div>');
+    }
+    //player.setAltViewer(showAlts);
+
 </script>
-<h1 class="text-center">Linear Anket</h1>
-<button type="button" data-loading-text="Загрузка анкеты с сервера..." class="btn btn-primary" onclick="load()">
-    Загрузить тестовую анкету
-</button>
+<div class="container">
+    <h1 class="text-center">Linear Anket</h1>
+    <button id="load_anket_btn" type="button" data-loading-text="Загрузка анкеты с сервера..." class="btn btn-primary text-center" onclick="load()">
+        Загрузить тестовую анкету
+    </button>
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h3 class="panel-title" id="q_title"></h3>
+        </div>
+                <div class="panel-body" id="panel_alts">
+
+                </div>
+
+    </div>
+    <button id="playerNext" type="button" data-loading-text="Далее..." class="btn btn-primary right" onclick="determineNext()">
+        Далее
+    </button>
+</div>
 
 <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
 <script src="//code.jquery.com/jquery.js"></script>
