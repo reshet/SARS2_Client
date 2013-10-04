@@ -148,6 +148,10 @@
                 }
         );
     }
+    var addzero = function(el){
+        if(el <10) el ='0'+el;
+        return el;
+    }
     function finilizeInterview(){
         var formatDate = function(datetime){
             var start_date = new Date(datetime);
