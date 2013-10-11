@@ -317,6 +317,7 @@ function AnketParser(anket_raw){
 //var player = require("../src/domain/Player.js");
 
 var url_get_anket = 'http://82.196.0.140/MSS/JSAdapter.php';
+
 //var url_get_anket = 'http://localhost/MSS/JSAdapterLocal.php';
 
 
