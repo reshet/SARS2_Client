@@ -7,13 +7,16 @@
     <!-- Bootstrap -->
     <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
 
+
 <!--     HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries
     [if lt IE 9]>
     <script src="../../assets/js/html5shiv.js"></script>
     <script src="../../assets/js/respond.min.js"></script>
+
     <![endif]-->
 
     <script src="../../buster-intro/myfakepackage.js"></script>
+    <script src="js/modernizr-2.6.2.min.js"></script>
 
 
 </head>
@@ -33,24 +36,58 @@
     var current_interview = {};
     var curr_elem_index = 0;
     var url_post_interview = 'http://82.196.0.140/MSS/MainGate.php';
+
+    /*function supports_html5_storage() {
+        try {
+            return 'localStorage' in window && window['localStorage'] !== null;
+        } catch (e) {
+            return false;
+        }
+    }*/
+
     function load(){
         // $().button('loading');
     /*    require(["../../buster-intro/src/domain/MainClasses.js","../../buster-intro/src/domain/Player.js","../../buster-intro/src/adapter.js"], function (foo,foo2,foo3) {
 
         });*/
-        loadAnket(592,function(data){
-            //$().button('');
-            console.log(data);
-            var parser = new AnketParser(data["LOGIC"]);
-            var logic = parser.parse();
-            console.log(logic);
-             logicAnket = logic;
-            //console.log("AFTER");
-            //console.log(logic.toString());
-            next(curr_elem_index)
-            curr_start = new Date().getTime();
-            $("#load_anket_btn").hide();
-        });
+        console.log(Modernizr.localstorage);
+        if(Modernizr.localstorage){
+            //localStorage.clear();
+            var prevAnket = localStorage.getItem("logic_anket_592");
+            if(prevAnket !== null) {
+                var parsed = JSON.parse(prevAnket);
+                //console.log(parsed);
+                var parser = new AnketParser(parsed);
+                var logic = parser.parse();
+                logicAnket = logic;
+                //console.log(logicAnket);
+                console.log("Loaded from local storage!");
+                next(curr_elem_index)
+                curr_start = new Date().getTime();
+                $("#load_anket_btn").hide();
+            }
+            else{
+                loadAnket(592,function(data){
+                    //$().button('');
+                    //console.log(data);
+                    var ss = data["LOGIC"];
+                    localStorage.setItem("logic_anket_592",JSON.stringify(ss));
+                    var parser = new AnketParser(ss);
+                    var logic = parser.parse();
+                    //console.log(logic);
+                    logicAnket = logic;
+                    //var str = JSON.stringify(logic);
+                    //console.log(str);
+                    //localStorage.setItem("logic_anket_592",logicAnket);
+                    //console.log("AFTER");
+                    //console.log(logic.toString());
+                    next(curr_elem_index)
+                    curr_start = new Date().getTime();
+                    $("#load_anket_btn").hide();
+                });
+
+            }
+        }
 
     }
     function determineNext(){
@@ -269,7 +306,8 @@
 </div>
 
 <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-<script src="//code.jquery.com/jquery.js"></script>
+<script src="js/jquery-1.9.1.min.js"></script>
+
 <!-- Include all compiled plugins (below), or include individual files as needed -->
 <script src="js/bootstrap.min.js"></script>
 </body>
