@@ -186,14 +186,17 @@
             console.log(stored_hashes)
             hashes = JSON.parse(stored_hashes)
             console.log(hashes)
-            for(var i = 0; i < hashes.length;i++){
-                var hash = hashes[i];
-                var xml = localStorage.getItem(hash);
-                console.log("done int hash contents is "+done_interviews[hash]);
-                if(done_interviews[hash]===undefined){
-                    done_interviews[hash] = xml;
+            if(hashes!==null){
+                for(var i = 0; i < hashes.length;i++){
+                    var hash = hashes[i];
+                    var xml = localStorage.getItem(hash);
+                    console.log("done int hash contents is "+done_interviews[hash]);
+                    if(done_interviews[hash]===undefined){
+                        done_interviews[hash] = xml;
+                    }
                 }
             }
+
             console.log(done_interviews);
             $("#ints_done").text(hashes.length);
             console.log("END DONE INTS LOAC LOCAL")
@@ -203,11 +206,11 @@
 
     window.ononline = function () {
         alert("Вы в сети! Все сохраненные интервью будут отпралены.");
+        uploadAllSaved();
     };
 
     window.onoffline = function () {
         alert("Вы вне сети! Все пройденные интервью будут сохранены и отправлены при появлении соединения.");
-        uploadAllSaved();
     };
     function uploadAllSaved(){
         for(var hash in done_interviews){
