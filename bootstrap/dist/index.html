@@ -30,6 +30,7 @@
     var curr_start;
     var curr_finish;
     function initialize(){
+        loadDoneInts();
         // console.log(url_get_anket);
         //console.log(new Transition("",""));
       /*  var s = new Logic();
@@ -74,7 +75,7 @@
                 next(curr_elem_index)
                 curr_start = new Date().getTime();
                 $("#load_anket_btn").hide();
-                loadDoneInts();
+
                 //
             }
             else{
