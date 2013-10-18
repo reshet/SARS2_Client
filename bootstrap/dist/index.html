@@ -1,6 +1,6 @@
 <!DOCTYPE html>
-<!--<html>-->
-<html manifest="sars2.manifest">
+<html>
+<!--<html manifest="sars2.manifest">-->
 <head>
     <title>Bootstrap 101 Template</title>
     <meta charset='utf-8'/>
@@ -19,6 +19,8 @@
 
     <script src="../../buster-intro/myfakepackage.js"></script>
     <script src="js/modernizr-2.6.2.min.js"></script>
+    <script src="js/md5-min.js"></script>
+
 
 
 </head>
@@ -35,8 +37,11 @@
         console.log(s);*/
     }
     var logicAnket = null;
+    var done_interviews = {};
+    var uploaded_ints = {};
     var current_interview = {};
     var curr_elem_index = 0;
+    //var url_post_interview = 'http://82.196.0.140/MSS/MainGate.php';
     var url_post_interview = 'http://82.196.0.140/MSS/MainGate.php';
 
     /*function supports_html5_storage() {
@@ -69,6 +74,7 @@
                 next(curr_elem_index)
                 curr_start = new Date().getTime();
                 $("#load_anket_btn").hide();
+                loadDoneInts();
                 //
             }
             else{
@@ -155,7 +161,101 @@
         console.log(current_interview[code]);
 
     }
+    function persistDoneInts(){
 
+        if(Modernizr.localstorage){
+            console.log("START DONE INTS PERSIST")
+            var hashes = []
+            for(var hash in done_interviews){
+                hashes.push(hash);
+                localStorage.setItem(hash,done_interviews[hash]);
+            }
+            console.log(hashes);
+            var stored_hashes = JSON.stringify(hashes);
+            console.log(stored_hashes);
+            localStorage.setItem("done_interview_hashes",stored_hashes);
+            console.log("END DONE INTS PERSIST")
+        }
+    };
+    function loadDoneInts(){
+        if(Modernizr.localstorage){
+            console.log("START DONE INTS LOAD LOCAL")
+            var hashes = []
+            var stored_hashes = localStorage.getItem("done_interview_hashes");
+            console.log(stored_hashes)
+            hashes = JSON.parse(stored_hashes)
+            console.log(hashes)
+            for(var i = 0; i < hashes.length;i++){
+                var hash = hashes[i];
+                var xml = localStorage.getItem(hash);
+                console.log("done int hash contents is "+done_interviews[hash]);
+                if(done_interviews[hash]===undefined){
+                    done_interviews[hash] = xml;
+                }
+            }
+            console.log(done_interviews);
+            $("#ints_done").text(hashes.length);
+            console.log("END DONE INTS LOAC LOCAL")
+
+        }
+    };
+
+    window.ononline = function () {
+        alert("Вы в сети! Все сохраненные интервью будут отпралены.");
+    };
+
+    window.onoffline = function () {
+        alert("Вы вне сети! Все пройденные интервью будут сохранены и отправлены при появлении соединения.");
+        uploadAllSaved();
+    };
+    function uploadAllSaved(){
+        for(var hash in done_interviews){
+            if(uploaded_ints[hash]===undefined){
+                uploadInterview(done_interviews[hash],1);
+            }
+        }
+    }
+    function updateUploadStatus(hash){
+          uploaded_ints[hash] = true;
+        if(Modernizr.localstorage){
+            localStorage.setItem("ints_uploaded",JSON.stringify(uploaded_ints));
+            uploaded_ints = JSON.parse(localStorage.getItem("ints_uploaded"));
+        }
+        var total_upl_count = 0;
+        for(var hs in uploaded_ints){
+            if(uploaded_ints[hs] === true)total_upl_count++;
+        }
+        $("#ints_uploaded").text(total_upl_count);
+    };
+    function uploadInterview(contents, tries){
+        if(tries >= 0){
+            console.log("Попытка отравить интервью")
+            $.ajax({
+                        type:"POST",
+                        url:url_post_interview,
+                        data:contents,
+                        contentType: "text/xml",
+                        dataType: "text",
+                        success:function(data){
+                            console.log(data);
+                            updateUploadStatus(hex_md5(contents));
+                            console.log("Отправлено успешно!")
+                        },
+                        error:function(data){
+                            if(tries > 0){
+                                console.log("Не удалось отправить, повтор...")
+                               uploadInterview(contents,tries-1);
+                            }  else{
+                                alert("Не удалось отправить анкету. Код ошибки: "+JSON.stringify(data));
+                            }
+                        }
+                    }
+            );
+        }else{
+            console.log("Отправка не удалась...")
+
+        }
+    }
     function actualServerPostInterview(interview,login,task_id){
         function encode_utf8( s ) {
             return unescape( encodeURIComponent( s ) );
@@ -177,38 +277,33 @@
                 '<method name = "sitTask" TASK="'+task_id+'" ANSWER="'+anket_ans+'" USERID ="'+login+'" PSWD="default"/>'+
                 '</RQ>';
         console.log(xml);
-        $.ajax({
-                    type:"POST",
-                    url:url_post_interview,
-                    data:xml,
-                    contentType: "text/xml",
-                    dataType: "text",
-                    success:function(data){
-                        console.log(data);
-                    },
-                    error:function(data){
-                        alert("Ошибка, сообщите администратору: "+JSON.stringify(data));
-                    }
-                }
-        );
+        var hash =hex_md5(xml);
+        //console.log(hash);
+        done_interviews[hash] = xml;
+        loadDoneInts();
+        persistDoneInts();
+        loadDoneInts();
+        uploadInterview(xml,3);
+
     }
     var addzero = function(el){
         if(el <10) el ='0'+el;
         return el;
     }
-    function finilizeInterview(){
-        var formatDate = function(datetime){
-            var start_date = new Date(datetime);
-            var month = addzero(start_date.getMonth()+1);
-            var day = addzero(start_date.getDate());
-            var hours = addzero(start_date.getHours());
-            var minutes = addzero(start_date.getMinutes());
-            var seconds = addzero(start_date.getSeconds());
-            var year = 1900+start_date.getYear();
+    var formatDate = function(datetime){
+        var start_date = new Date(datetime);
+        var month = addzero(start_date.getMonth()+1);
+        var day = addzero(start_date.getDate());
+        var hours = addzero(start_date.getHours());
+        var minutes = addzero(start_date.getMinutes());
+        var seconds = addzero(start_date.getSeconds());
+        var year = 1900+start_date.getYear();
 
-            start_date = day+"."+month+"."+year+" "+hours+":"+minutes+":"+seconds;
-            return start_date;
-        }
+        start_date = day+"."+month+"."+year+" "+hours+":"+minutes+":"+seconds;
+        return start_date;
+    }
+    function finilizeInterview(){
+
      //finish_date = finish_date.toString('yyyy-mm-dd')+" "+finish_date.toTimeString();
         current_interview["START_TIME"] = formatDate(curr_start);
         current_interview["END_TIME"] = formatDate(curr_finish);
@@ -310,6 +405,15 @@
     <button id="playerNext" type="button" data-loading-text="Далее..." class="btn btn-primary right" onclick="determineNext()">
         Далее
     </button>
+</div>
+</br>
+</br>
+<div class="panel-footer">
+    <table>
+       <tr>Сделано интервью: <label id="ints_done"/></tr>
+        </br>
+       <tr>Отправлено интервью: <label id="ints_uploaded"/></tr>
+    </table>
 </div>
 
 
