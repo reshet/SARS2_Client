@@ -1,6 +1,6 @@
 <!DOCTYPE html>
-<!--<html>-->
-<html manifest="sars2.manifest">
+<html>
+<!--<html manifest="sars2.manifest">-->
 <head>
     <title>Bootstrap 101 Template</title>
     <meta charset='utf-8'/>
@@ -38,6 +38,7 @@
         console.log(s);*/
     }
     var logicAnket = null;
+    var player = null;
     var done_interviews = {};
     var uploaded_ints = {};
     var current_interview = {};
@@ -60,42 +61,49 @@
         });*/
         alert("load anket clicked");
         console.log(Modernizr.localstorage);
+        var anket_id = 566;
         if(Modernizr.localstorage){
             //localStorage.clear();
-            var prevAnket = localStorage.getItem("logic_anket_592");
+            console.log("HERE")
+            var prevAnket = localStorage.getItem("logic_anket_"+anket_id);
+            console.log(prevAnket);
             if(prevAnket !== null) {
                 var parsed = JSON.parse(prevAnket);
                 //console.log(parsed);
                 var parser = new AnketParser(parsed);
                 var logic = parser.parse();
                 logicAnket = logic;
+                player = new AnketPlayer(logicAnket);
                 //console.log(logicAnket);
                 console.log("Loaded from local storage!");
                 alert("local storage loaded");
-                next(curr_elem_index)
+                determineNext();
+                //next(curr_elem_index)
                 curr_start = new Date().getTime();
                 $("#load_anket_btn").hide();
 
                 //
             }
             else{
-
-                loadAnket(592,function(data){
+                console.log("on else")
+                loadAnket(anket_id,function(data){
                     alert("remote anket loaded");
                     //$().button('');
                     //console.log(data);
                     var ss = data["LOGIC"];
-                    localStorage.setItem("logic_anket_592",JSON.stringify(ss));
+                    localStorage.setItem("logic_anket_"+anket_id,JSON.stringify(ss));
                     var parser = new AnketParser(ss);
                     var logic = parser.parse();
                     //console.log(logic);
                     logicAnket = logic;
+                    player = new AnketPlayer(logicAnket);
                     //var str = JSON.stringify(logic);
                     //console.log(str);
                     //localStorage.setItem("logic_anket_592",logicAnket);
                     //console.log("AFTER");
                     //console.log(logic.toString());
-                    next(curr_elem_index)
+                    //next(curr_elem_index)
+                    determineNext()
                     curr_start = new Date().getTime();
                     $("#load_anket_btn").hide();
                 });
@@ -106,16 +114,23 @@
     }
     function determineNext(){
 
-        saveResult();
-        curr_elem_index++;
-        if(curr_elem_index<logicAnket.getQuestions().length){
-           next(curr_elem_index);
+        var ans = saveResult();
+        //curr_elem_index++;
+        var nextquest = player.showNextScreen(ans);
+        if(nextquest !== null){
+           next(elem);
         }else{
             finishInterview();
         }
+
+        /*if(curr_elem_index<logicAnket.getQuestions().length){
+            next(curr_elem_index);
+        }else{
+            finishInterview();
+        }*/
     }
-    function next(index){
-        var curr_quest = logicAnket.getQuestions()[index];
+    function next(elem){
+        var curr_quest = elem;
         console.log(curr_quest);
         $("#q_title").text(curr_quest.getText());
         //console.log(typeof curr_quest);
@@ -134,7 +149,27 @@
 
 
     }
-    function saveResult(){
+    /*function next(index){
+        var curr_quest = logicAnket.getQuestions()[index];
+        console.log(curr_quest);
+        $("#q_title").text(curr_quest.getText());
+        //console.log(typeof curr_quest);
+        if(curr_quest instanceof SingleChoiceQuestion){
+            showAlts(curr_quest.getAlternatives());
+        }
+        else
+        if(curr_quest instanceof MultipleChoiceQuestion){
+            console.log("jhere");
+            showAltsCheckbox(curr_quest.getAlternatives());
+        }else
+        if(curr_quest instanceof OpenedQuestion){
+            showInput(curr_quest.getType());
+        }
+
+
+
+    }*/
+    function saveResult(){    //586. 208/
         var curr_quest = logicAnket.getQuestions()[curr_elem_index];
         var code = curr_quest.getId();
         if(curr_quest instanceof SingleChoiceQuestion){

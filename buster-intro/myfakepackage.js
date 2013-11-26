@@ -84,6 +84,60 @@ function Alternative(id,text){
 var altcheck = new Alternative(1,'blallada');
 //console.log("altcheckId:" + altcheck.getId()) ;
 
+function QuestionAnswer(question_id,question,answer){
+    var _question_id = question_id;
+    var _question = question;
+    var _ans = answer;
+
+    this.getQID = function(){
+        return _question_id;
+    }
+
+    this.getQuestion = function(){
+        return _question;
+    }
+
+    this.getAnswer = function() {
+        return _ans;
+
+    }
+    this.toString = function(){
+        var str =  _question_id+" "+_question+" "+_ans;
+        return str;
+    }
+
+};
+function AnketPlayer(logic){
+    var _logic = logic;
+    var _сurr_quest = logic.getQuestions()[0];
+    this.showNextScreen = function(prev_ans){
+        if(prev_ans === null) return null;
+        var qid = prev_ans.getQID();
+        var ans = prev_ans.getAnswer();
+        var trans = logic.getTransitions();
+        var nextid = null;
+        for(var tr in trans){
+            if(tr.getStart() === qid){
+                nextid = tr.getEnd();
+                break;
+            }
+        }
+        if(nextid !== null){
+            for(var elem in _logic.getQuestions()){
+                if(elem.getId() === nextid){
+                    return elem;
+                    break;
+                }
+            }
+        }
+    }
+    this.toString = function(){
+        var str =  _logic+"";
+        return str;
+    }
+
+};
+
 function SingleChoiceQuestion(id,text,alternatives,withAnother){
     var _alternatives = alternatives;
     var _id = id;
@@ -219,6 +273,12 @@ function OpenedQuestion(id,text,type){
 function Transition(start,end){
     var _start = start;
     var _end = end;
+    this.getStart = function(){
+        return _start
+    }
+    this.getEnd = function(){
+        return _end
+    }
     this.toString = function(){
         return _start+" "+_end;
     }
@@ -316,15 +376,18 @@ function AnketParser(anket_raw){
 
 //var player = require("../src/domain/Player.js");
 
-var url_get_anket = 'http://82.196.0.140/MSS/JSAdapter.php';
+//var url_get_anket = 'http://82.196.0.140/MSS/JSAdapter.php';
 
-//var url_get_anket = 'http://localhost/MSS/JSAdapterLocal.php';
+var url_get_anket = 'http://localhost/MSS/JSAdapterLocal.php?task=';
 
 
 
 
 var loadAnket = function(task_id,cb){
-    $.getJSON(url_get_anket,function(data){
+    console.log(task_id);
+    var final_url = url_get_anket+""+task_id
+    console.log(final_url);
+    $.getJSON(final_url,function(data){
         cb(data);
     });
 }
