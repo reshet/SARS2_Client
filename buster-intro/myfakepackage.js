@@ -323,6 +323,9 @@ var url_get_anket = 'http://localhost/MSS/JSAdapterLocal.php?task=';
 
 
 
+
+
+
 var loadAnket = function(task_id,cb){
     $.getJSON(url_get_anket+task_id,function(data){
         cb(data);
