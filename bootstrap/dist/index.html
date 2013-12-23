@@ -29,6 +29,8 @@
 
     var curr_start;
     var curr_finish;
+    var anketid = 582;
+    //
     function initialize(){
         loadDoneInts();
         // console.log(url_get_anket);
@@ -38,13 +40,12 @@
         console.log(s);*/
     }
     var logicAnket = null;
-    var player = null;
     var done_interviews = {};
     var uploaded_ints = {};
     var current_interview = {};
     var curr_elem_index = 0;
     //var url_post_interview = 'http://82.196.0.140/MSS/MainGate.php';
-    var url_post_interview = 'http://82.196.0.140/MSS/MainGate.php';
+    var url_post_interview = 'http://localhost/MSS/JSAdapterLocalPost.php';
 
     /*function supports_html5_storage() {
         try {
@@ -61,49 +62,43 @@
         });*/
         alert("load anket clicked");
         console.log(Modernizr.localstorage);
-        var anket_id = 566;
         if(Modernizr.localstorage){
-            //localStorage.clear();
-            console.log("HERE")
-            var prevAnket = localStorage.getItem("logic_anket_"+anket_id);
-            console.log(prevAnket);
+
+            console.log(anketid)
+            var prevAnket = localStorage.getItem("logic_anket_"+anketid);
             if(prevAnket !== null) {
                 var parsed = JSON.parse(prevAnket);
                 //console.log(parsed);
                 var parser = new AnketParser(parsed);
                 var logic = parser.parse();
                 logicAnket = logic;
-                player = new AnketPlayer(logicAnket);
                 //console.log(logicAnket);
                 console.log("Loaded from local storage!");
                 alert("local storage loaded");
-                determineNext();
-                //next(curr_elem_index)
+                next(curr_elem_index)
                 curr_start = new Date().getTime();
                 $("#load_anket_btn").hide();
 
                 //
             }
             else{
-                console.log("on else")
-                loadAnket(anket_id,function(data){
+                console.log(anketid)
+                loadAnket(anketid,function(data){
                     alert("remote anket loaded");
                     //$().button('');
                     //console.log(data);
                     var ss = data["LOGIC"];
-                    localStorage.setItem("logic_anket_"+anket_id,JSON.stringify(ss));
+                    localStorage.setItem("logic_anket_"+anketid,JSON.stringify(ss));
                     var parser = new AnketParser(ss);
                     var logic = parser.parse();
                     //console.log(logic);
                     logicAnket = logic;
-                    player = new AnketPlayer(logicAnket);
                     //var str = JSON.stringify(logic);
                     //console.log(str);
                     //localStorage.setItem("logic_anket_592",logicAnket);
                     //console.log("AFTER");
                     //console.log(logic.toString());
-                    //next(curr_elem_index)
-                    determineNext()
+                    next(curr_elem_index)
                     curr_start = new Date().getTime();
                     $("#load_anket_btn").hide();
                 });
@@ -114,23 +109,16 @@
     }
     function determineNext(){
 
-        var ans = saveResult();
-        //curr_elem_index++;
-        var nextquest = player.showNextScreen(ans);
-        if(nextquest !== null){
-           next(elem);
+        saveResult();
+        curr_elem_index++;
+        if(curr_elem_index<logicAnket.getQuestions().length){
+           next(curr_elem_index);
         }else{
             finishInterview();
         }
-
-        /*if(curr_elem_index<logicAnket.getQuestions().length){
-            next(curr_elem_index);
-        }else{
-            finishInterview();
-        }*/
     }
-    function next(elem){
-        var curr_quest = elem;
+    function next(index){
+        var curr_quest = logicAnket.getQuestions()[index];
         console.log(curr_quest);
         $("#q_title").text(curr_quest.getText());
         //console.log(typeof curr_quest);
@@ -149,27 +137,7 @@
 
 
     }
-    /*function next(index){
-        var curr_quest = logicAnket.getQuestions()[index];
-        console.log(curr_quest);
-        $("#q_title").text(curr_quest.getText());
-        //console.log(typeof curr_quest);
-        if(curr_quest instanceof SingleChoiceQuestion){
-            showAlts(curr_quest.getAlternatives());
-        }
-        else
-        if(curr_quest instanceof MultipleChoiceQuestion){
-            console.log("jhere");
-            showAltsCheckbox(curr_quest.getAlternatives());
-        }else
-        if(curr_quest instanceof OpenedQuestion){
-            showInput(curr_quest.getType());
-        }
-
-
-
-    }*/
-    function saveResult(){    //586. 208/
+    function saveResult(){
         var curr_quest = logicAnket.getQuestions()[curr_elem_index];
         var code = curr_quest.getId();
         if(curr_quest instanceof SingleChoiceQuestion){
@@ -356,7 +324,7 @@
         $("#panel_alts").empty();
         $("#q_title").html("<h3><small>Завершено</small></h3>");
         $("#playerNext").hide();
-        actualServerPostInterview(current_interview, 1001,581);
+        actualServerPostInterview(current_interview, 1001,anketid);
         $("#panel_alts").append("<h3>Интервью пройдено! Результат отправлен на сервер</h3>");
         //total_ints_done++;
         //current_interview = {};
